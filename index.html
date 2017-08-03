@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    body,form,#message,li {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font: 13px Helvetica, Arial;
+    }
+    
+    form {
+      background: #000;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 90%;
+      margin-right: .5%;
+    }
+    
+    form button {
+      width: 7%;
+      background: rgb(130, 224, 255);
+      border: none;
+      padding: 10px;
+    }
+    
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #messages li {
+      padding: 5px 10px;
+    }
+    
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+    .model{
+    	display:none;
+    	position:fixed;
+    	top:50%;
+    	left:50%;
+    	width:400px;
+    	height:200px;
+    	margin-left:-200px;
+    	margin-top:-100px;
+    }
+  </style>
+</head>
+
+<body>
+  <ul id="messages"></ul>
+  <form action="">
+    <input id="m" autocomplete="off" />
+    <button type="submit">Send</button>
+  </form>
+  <div class="model">
+  		<p>输入您的昵称</p>
+  		<input placeholder="请输入昵称">
+  </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<!--此处只能通过这种方式导入jq资源，或者npm安装-->
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+	//网页加载socket.io-client，暴露一个io全局对象
+	//io默认连接这个页面的host服务器
+	var socket = io();
+	$("form").submit(function(){
+		//触发socket的聊天事件，并传入input中的数据
+		socket.emit('chat message',$('#m').val());
+		$('#m').val('');
+		return false;
+	});
+	//客户端收到来自后端发送的聊天事件，将信息体现在页面中
+	socket.on('chat message',function(msg){
+		$('#messages').append($('<li>').text(msg));
+	});
+	$(function(){
+			//emit触发自定义事件。没有回调函数，因为这个自定义事件也是在某种操作下发生的，相应操作也写在这个操作下就好了
+			socket.emit('login');
+				$(".model").show('slow');
+	});
+
+</script>	
+</html>
