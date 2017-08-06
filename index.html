@@ -58,6 +58,27 @@
     	height:200px;
     	margin-left:-200px;
     	margin-top:-100px;
+    	background:#EEEEEE;
+    	border-radius:10px;
+    	text-align:center;
+    	z-index:100;
+    }
+    .cover{
+    	position:fixed;
+    	width:100%;
+    	height:100%;
+    	background:#000000;
+    	opacity:0.1;
+    	z-index:10;
+    }
+    .confirm{
+    	display:inline-block;
+    	padding:5px 10px;
+    	text-align:center;
+    	box-sizing:border-box;
+    	background:rgb(255,255,204);
+    	border-radius:10px;
+    	cursor:pointer;
     }
   </style>
 </head>
@@ -71,7 +92,10 @@
   <div class="model">
   		<p>输入您的昵称</p>
   		<input placeholder="请输入昵称">
+  		<br>
+  		<a class="confirm">确认输入</a>
   </div>
+  <div class="cover"></div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <!--此处只能通过这种方式导入jq资源，或者npm安装-->
@@ -90,11 +114,19 @@
 	socket.on('chat message',function(msg){
 		$('#messages').append($('<li>').text(msg));
 	});
+	socket.on('someoneEnter',function(msg){
+		alert('aaaaaaaa'+msg);
+	})
 	$(function(){
 			//emit触发自定义事件。没有回调函数，因为这个自定义事件也是在某种操作下发生的，相应操作也写在这个操作下就好了
 			socket.emit('login');
-				$(".model").show('slow');
+			$(".model").show('slow');
+			$(".confirm").on('click',function(){
+				console.log(1);
+				$(".model").hide('slow');
+				$(".cover").hide('slow');
+				socket.emit('someoneEnter',$('.model input').val());
+			});
 	});
-
 </script>	
 </html>
