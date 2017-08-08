@@ -29,7 +29,7 @@ io.on('connection',function(socket){
 		io.emit('chat message',msg);
 	});
 	socket.on('someoneEnter',function(msg){
-		console.log('有人进来了，昵称是' + msg);
+		//触发所有在此聊天室的成员电脑
 		io.emit('someoneEnter',msg);
 	});
 });
