@@ -81,6 +81,9 @@
     	border-radius:10px;
     	cursor:pointer;
     }
+    p{
+    	margin-top:50px;
+    }
   </style>
 </head>
 
@@ -94,6 +97,7 @@
   <div class="model">
   		<p>输入您的昵称</p>
   		<input placeholder="请输入昵称">
+  		<br>
   		<br>
   		<a class="confirm">确认输入</a>
   </div>
@@ -123,16 +127,20 @@
 	});
 	socket.on('someoneEnter',function(msg){
 			$('#messages').append($('<li style="text-align:center;width:20%;height:30px;margin:5px auto;background:#EEEEEE;border-radius:10px;">').text('欢迎'+msg));
-	})
+	});
 	$(function(){
 			//emit触发自定义事件。没有回调函数，因为这个自定义事件也是在某种操作下发生的，相应操作也写在这个操作下就好了
 			socket.emit('login');
 			$(".model").show('slow');
 			$(".confirm").on('click',function(){
-				$(".model").hide('slow');
-				$(".cover").hide('slow');
-				socket.emit('someoneEnter',$('.model input').val());
-				personalName = $('.model input').val();
+				if($(".model input").val().trim() == ''){
+					alert('昵称不能为空');
+				}else{
+					$(".model").hide('slow');
+				  $(".cover").hide('slow');
+					socket.emit('someoneEnter',$('.model input').val());
+					personalName = $('.model input').val();
+				}
 			});
 	});
 </script>	
