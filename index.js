@@ -5,6 +5,9 @@ var http = require('http').Server(app);
 //通过传递一个http服务器对象新建了一个socket.io对象
 var io = require('socket.io')(http);
 
+var whetherRepeat = false;
+var peopleList = [];
+
 //express对象实例使用get方法发送一个标签
 app.get("/",function(req,res){
 	//res.send('<h1>Hello socket.io</h1>')
@@ -19,8 +22,11 @@ io.on('connection',function(socket){
 	socket.on('login',function(){
 		//后端在此处只要检测登陆用户名的唯一性就可以了，其他的都可以交给前端来做
 	});
-	socket.on('disconnect',function(){
+	socket.on('disconnect',function(msg){
 		//disconnect为socket自带的事件
+	});
+	socket.on('leave',function(msg){
+		io.emit('someoneLeave',msg);
 	});
 	socket.on('chat message',function(msg){
 		//前端触发了聊天事件，后端对传来的数据进行处理
@@ -30,7 +36,19 @@ io.on('connection',function(socket){
 	});
 	socket.on('someoneEnter',function(msg){
 		//触发所有在此聊天室的成员电脑
-		io.emit('someoneEnter',msg);
+		for(var i = 0 ; i < peopleList.length ; i++){
+			if(msg == peopleList[i]){
+				whetherRepeat = true;
+			}
+		}
+		if(whetherRepeat){
+			socket.emit("repeat");
+			whetherRepeat = false;
+		}else{
+			peopleList.push(msg);
+			io.emit('someoneEnter',msg);
+			socket.emit('hide');
+		}
 	});
 });
 

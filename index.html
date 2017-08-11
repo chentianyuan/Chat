@@ -71,6 +71,8 @@
     	background:#000000;
     	opacity:0.1;
     	z-index:10;
+    	top:0;
+    	left:0;
     }
     .confirm{
     	display:inline-block;
@@ -106,42 +108,5 @@
 <script src="/socket.io/socket.io.js"></script>
 <!--此处只能通过这种方式导入jq资源，或者npm安装-->
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-	//网页加载socket.io-client，暴露一个io全局对象
-	//io默认连接这个页面的host服务器
-	var socket = io();
-	var personalName = '';
-	$("form").submit(function(){
-		//触发socket的聊天事件，并传入input中的数据
-		socket.emit('chat message',personalName+':  '+ $('#m').val());
-		$('#m').val('');
-		return false;
-	});
-	//客户端收到来自后端发送的聊天事件，将信息体现在页面中
-	socket.on('chat message',function(msg){
-		if(msg.indexOf(personalName) == 0){
-			$('#messages').append($('<li style="text-align:right;width:100%;">').text(msg));
-		}else{
-			$('#messages').append($('<li>').text(msg));
-		}
-	});
-	socket.on('someoneEnter',function(msg){
-			$('#messages').append($('<li style="text-align:center;width:20%;height:30px;margin:5px auto;background:#EEEEEE;border-radius:10px;">').text('欢迎'+msg));
-	});
-	$(function(){
-			//emit触发自定义事件。没有回调函数，因为这个自定义事件也是在某种操作下发生的，相应操作也写在这个操作下就好了
-			socket.emit('login');
-			$(".model").show('slow');
-			$(".confirm").on('click',function(){
-				if($(".model input").val().trim() == ''){
-					alert('昵称不能为空');
-				}else{
-					$(".model").hide('slow');
-				  $(".cover").hide('slow');
-					socket.emit('someoneEnter',$('.model input').val());
-					personalName = $('.model input').val();
-				}
-			});
-	});
-</script>	
+<script type="text/javascript" src="client.js" ></script>
 </html>
