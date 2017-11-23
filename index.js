@@ -1,5 +1,6 @@
+var express = require('express')
 //app相当于一个http服务器
-var app = require('express')();
+var app = express();
 //传入一个express实例，开启服务器
 var http = require('http').Server(app);
 //通过传递一个http服务器对象新建了一个socket.io对象
@@ -7,6 +8,8 @@ var io = require('socket.io')(http);
 
 var whetherRepeat = false;
 var peopleList = [];
+//处理/时，静态资源从本地目录下查找
+app.use('/', express.static(__dirname));
 
 //express对象实例使用get方法发送一个标签
 app.get("/",function(req,res){

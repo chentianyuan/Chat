@@ -1,6 +1,5 @@
-<script>
-	//网页加载socket.io-client，暴露一个io全局对象
-	//io默认连接这个页面的host服务器
+//网页加载socket.io-client，暴露一个io全局对象
+//io默认连接这个页面的host服务器
 	var socket = io();
 	var name = '';
 	var personalName = '';
@@ -51,4 +50,3 @@
 	};
 	
 	});
-</script>	
